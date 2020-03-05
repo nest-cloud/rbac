@@ -1,6 +1,7 @@
 export * from './decorators/inject-rbac.decorator';
 export * from './decorators/resource.decorator';
 export * from './decorators/verb.decorator';
+export * from './decorators/use-validators.decorator';
 export * from './interfaces/rbac-account.interface';
 export * from './interfaces/rbac-role-binding.interface';
 export * from './interfaces/rbac-role.interface';
