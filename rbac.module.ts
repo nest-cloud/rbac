@@ -24,8 +24,8 @@ export class RbacModule {
         const rbacProvider = {
             provide: RBAC,
             useFactory: async (registry: RbacValidatorRegistry, ...args: any[]): Promise<Rbac> => {
-                const boot: IBoot = args[inject.indexOf(BOOT)];
-                const config: IConfig = args[inject.indexOf(CONFIG)];
+                const boot: IBoot = args[inject.indexOf(BOOT) - 1];
+                const config: IConfig = args[inject.indexOf(CONFIG) - 1];
                 if (boot) {
                     options.parameters = boot.get<{ [key: string]: string }>('rbac.parameters', options.parameters);
                 }
@@ -34,8 +34,8 @@ export class RbacModule {
                 }
                 options.parameters = options.parameters || {};
 
-                const consul = args[inject.indexOf(CONSUL)];
-                const etcd: IEtcd = args[inject.indexOf(ETCD)];
+                const consul = args[inject.indexOf(CONSUL) - 1];
+                const etcd: IEtcd = args[inject.indexOf(ETCD) - 1];
 
                 const rbac = new Rbac(options, registry);
                 if (consul) {
