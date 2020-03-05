@@ -1,0 +1,32 @@
+{
+  "name": "@nestcloud/rbac",
+  "version": "0.7.0",
+  "description": "Rbac component for @nestcloud",
+  "author": "Miaowing <i@zfeng.net>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf *.js **/*.js *.d.ts **/*.d.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nest-cloud/rbac.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nest-cloud/rbac/issues"
+  },
+  "homepage": "https://github.com/nest-cloud/rbac#readme",
+  "dependencies": {
+    "reflect-metadata": "^0.1.12",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "@nestcloud/common": "^0.7.2",
+    "@nestjs/common": "^6.11.8",
+    "@nestjs/core": "^6.11.8",
+    "etcd3": "^0.2.13"
+  }
+}
