@@ -37,6 +37,26 @@ export class Store {
             const roleName: string = roleBindings[i].role;
             if (this.data.roles.has(roleName)) {
                 const role: IRbacRole = this.data.roles.get(roleName);
+                if (!role.blocks) {
+                    continue;
+                }
+                const hasRule = role.blocks.filter(rule => {
+                    const hasResource = rule.resources.includes(resource) || rule.resources.includes('*');
+                    const hasVerb = rule.verbs.includes(verb) || rule.verbs.includes('*');
+                    return hasResource && hasVerb;
+                }).length !== 0;
+                if (hasRule) {
+                    return false;
+                }
+            }
+        }
+        for (let i = 0; i < roleBindings.length; i++) {
+            const roleName: string = roleBindings[i].role;
+            if (this.data.roles.has(roleName)) {
+                const role: IRbacRole = this.data.roles.get(roleName);
+                if (!role.rules) {
+                    continue;
+                }
                 const hasRule = role.rules.filter(rule => {
                     const hasResource = rule.resources.includes(resource) || rule.resources.includes('*');
                     const hasVerb = rule.verbs.includes(verb) || rule.verbs.includes('*');
