@@ -6,10 +6,11 @@ import { IRbacOptions } from '../interfaces/rbac-options.interface';
 import { IEtcd } from '@nestcloud/common';
 import * as RPC from 'etcd3/lib/src/rpc';
 import { IRbacData } from '../interfaces/rbac-data.interface';
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 
 @Injectable()
 export class EtcdValidator implements IRbacValidator {
+    private readonly logger = new Logger(EtcdValidator.name);
     private readonly store: Store = new Store();
     private client: IEtcd;
 
@@ -31,11 +32,16 @@ export class EtcdValidator implements IRbacValidator {
     }
 
     private async watch(name: string, namespace: string) {
-        const data = await this.client.namespace(namespace).get(name).string();
-        if (data) {
-            const { accounts, roles, roleBindings } = parse(data);
-            this.store.init(accounts, roles, roleBindings);
+        try {
+            const data = await this.client.namespace(namespace).get(name).string();
+            if (data) {
+                const { accounts, roles, roleBindings } = parse(data);
+                this.store.init(accounts, roles, roleBindings);
+            }
+        } catch (e) {
+            this.logger.error('Init rbac data error', e);
         }
+
 
         const watcher = await this.client.namespace(namespace).watch().key(name).create();
         watcher.on('data', (res: RPC.IWatchResponse) => {
@@ -49,6 +55,17 @@ export class EtcdValidator implements IRbacValidator {
                         this.store.init(accounts, roles, roleBindings);
                     }
                 }
+            }
+        });
+        watcher.on('connected', async () => {
+            try {
+                const data = await this.client.namespace(namespace).get(name).string();
+                if (data) {
+                    const { accounts, roles, roleBindings } = parse(data);
+                    this.store.init(accounts, roles, roleBindings);
+                }
+            } catch (e) {
+                this.logger.error('Init rbac data error', e);
             }
         });
     }
